@@ -1,0 +1,14 @@
+C:\Code\BeadApp\bin\Debug\net8.0\BeadApp.exe
+C:\Code\BeadApp\bin\Debug\net8.0\BeadApp.deps.json
+C:\Code\BeadApp\bin\Debug\net8.0\BeadApp.runtimeconfig.json
+C:\Code\BeadApp\bin\Debug\net8.0\BeadApp.dll
+C:\Code\BeadApp\bin\Debug\net8.0\BeadApp.pdb
+C:\Code\BeadApp\obj\Debug\net8.0\BeadApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Code\BeadApp\obj\Debug\net8.0\BeadApp.AssemblyInfoInputs.cache
+C:\Code\BeadApp\obj\Debug\net8.0\BeadApp.AssemblyInfo.cs
+C:\Code\BeadApp\obj\Debug\net8.0\BeadApp.csproj.CoreCompileInputs.cache
+C:\Code\BeadApp\obj\Debug\net8.0\BeadApp.dll
+C:\Code\BeadApp\obj\Debug\net8.0\refint\BeadApp.dll
+C:\Code\BeadApp\obj\Debug\net8.0\BeadApp.pdb
+C:\Code\BeadApp\obj\Debug\net8.0\BeadApp.genruntimeconfig.cache
+C:\Code\BeadApp\obj\Debug\net8.0\ref\BeadApp.dll
