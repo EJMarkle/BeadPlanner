@@ -12,3 +12,4 @@ C:\Code\BeadApp\obj\Debug\net8.0\refint\BeadApp.dll
 C:\Code\BeadApp\obj\Debug\net8.0\BeadApp.pdb
 C:\Code\BeadApp\obj\Debug\net8.0\BeadApp.genruntimeconfig.cache
 C:\Code\BeadApp\obj\Debug\net8.0\ref\BeadApp.dll
+C:\Code\BeadApp\obj\Debug\net8.0\BeadApp.sourcelink.json
