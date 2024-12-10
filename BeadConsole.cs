@@ -1,19 +1,29 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 
 namespace BeadApp
 {
+    // Pattern class, stores grid size and color data
+    public class Pattern
+    {
+        public string Name { get; set; }
+        public string[,] Grid { get; set; }
+
+        public Pattern(string name, string[,] grid)
+        {
+            Name = name;
+            Grid = grid;
+        }
+    }
+
     // The BeadConsole, handles CRUD operations
     public class BeadConsole
     {
-        static public List<string[,]> PatternsList = new List<string[,]>();
-   
+        static public List<Pattern> PatternsList = new List<Pattern>();
+
         public static void Start()
         {
-            // Console loop
             while (true)
             {
                 Console.WriteLine("Welcome to BeadApp!");
@@ -25,7 +35,9 @@ namespace BeadApp
                         PrintAll();
                         break;
                     case "DISPLAY":
-                        PrintPattern();
+                        Console.WriteLine("Enter the pattern name to display:");
+                        string patternName = Console.ReadLine()!;
+                        PrintPattern(patternName);
                         break;
                     case "NEW":
                         CreatePattern();
@@ -45,17 +57,49 @@ namespace BeadApp
                 }
             }
         }
-        // todo
+
+        // Prints all pattern names
         static public void PrintAll()
         {
-            Console.WriteLine("Prints all patterns");
-            Console.WriteLine(PatternsList);
+            Console.WriteLine("Listing all patterns:");
+            if (PatternsList.Count == 0)
+            {
+                Console.WriteLine("No patterns available.");
+            }
+            else
+            {
+                foreach (var pattern in PatternsList)
+                {
+                    Console.WriteLine($"- {pattern.Name}");
+                }
+            }
         }
-        // todo
-        static public void PrintPattern()
+
+        // Prints a specific pattern by name
+        static public void PrintPattern(string patternName)
         {
-            Console.WriteLine("Prints a specific design");
+            // Find the pattern with the specified name
+            var pattern = PatternsList.FirstOrDefault(p => p.Name.Equals(patternName, StringComparison.OrdinalIgnoreCase));
+
+            // Check if the pattern was found
+            if (pattern != null)
+            {
+                Console.WriteLine($"Printing pattern: {pattern.Name}");
+                for (int i = 0; i < pattern.Grid.GetLength(0); i++)
+                {
+                    for (int j = 0; j < pattern.Grid.GetLength(1); j++)
+                    {
+                        Console.Write(pattern.Grid[i, j] + " ");
+                    }
+                    Console.WriteLine(); // Move to the next line after each row
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Pattern with the name '{patternName}' not found.");
+            }
         }
+
         // Asks user for pattern name and dimensions
         // Sets hexadecimal color code per cell
         static public void CreatePattern()
@@ -73,13 +117,12 @@ namespace BeadApp
             Console.WriteLine("Is this correct? YES/NO");
             if (Console.ReadLine()!.ToUpper() == "NO")
             {
-                CreatePattern();
+                return;
             }
 
             string[,] pattern = new string[patternWidth, patternHeight];
 
             Console.WriteLine("Time to color the design!");
-            // cell population
             Console.WriteLine("Enter a default hex color for the entire pattern (e.g., #FF5733), or leave blank to set colors for each cell individually:");
             string defaultColor = Console.ReadLine()!;
             if (IsValidHexColor(defaultColor))
@@ -112,21 +155,23 @@ namespace BeadApp
                     }
                 }
             }
-            // Add pattern to master list
-            PatternsList.Add(pattern);
+
+            // Create a new Pattern object and add it to the list
+            PatternsList.Add(new Pattern(patternName, pattern));
             Console.WriteLine("Pattern added successfully!");
         }
-        // todo
+
         static void UpdatePattern()
         {
             Console.WriteLine("Opens a given pattern to edit...");
         }
-        // todo
+
         static public void RemovePattern()
         {
             Console.WriteLine("Removes a given pattern.");
         }
-        // Checks if user input is valid hex value
+
+        // Checks if user input is a valid hex value
         static bool IsValidHexColor(string color)
         {
             if (string.IsNullOrWhiteSpace(color) || color.Length != 7 || color[0] != '#')
@@ -140,6 +185,5 @@ namespace BeadApp
             }
             return true;
         }
-
     }
 }
