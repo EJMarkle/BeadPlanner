@@ -91,7 +91,7 @@ namespace BeadApp
                     {
                         Console.Write(pattern.Grid[i, j] + " ");
                     }
-                    Console.WriteLine(); // Move to the next line after each row
+                    Console.WriteLine();
                 }
             }
             else
@@ -120,23 +120,24 @@ namespace BeadApp
                 return;
             }
 
-            string[,] pattern = new string[patternWidth, patternHeight];
+            // Corrected grid initialization
+            string[,] pattern = new string[patternHeight, patternWidth];
 
             Console.WriteLine("Time to color the design!");
             Console.WriteLine("Enter a default hex color for the entire pattern (e.g., #FF5733), or leave blank to set colors for each cell individually:");
             string defaultColor = Console.ReadLine()!;
             if (IsValidHexColor(defaultColor))
             {
-                for (int i = 0; i < patternWidth; i++)
-                    for (int j = 0; j < patternHeight; j++)
+                for (int i = 0; i < patternHeight; i++)
+                    for (int j = 0; j < patternWidth; j++)
                         pattern[i, j] = defaultColor;
             }
             else
             {
                 Console.WriteLine("Let's set the color for each cell individually...");
-                for (int i = 0; i < patternWidth; i++)
+                for (int i = 0; i < patternHeight; i++)
                 {
-                    for (int j = 0; j < patternHeight; j++)
+                    for (int j = 0; j < patternWidth; j++)
                     {
                         while (true)
                         {
@@ -161,14 +162,156 @@ namespace BeadApp
             Console.WriteLine("Pattern added successfully!");
         }
 
+
+        // prompt for pattern to update, then allows for grid size name and color changing
         static void UpdatePattern()
         {
-            Console.WriteLine("Opens a given pattern to edit...");
+            Console.WriteLine("Which pattern would you like to edit?");
+            if (PatternsList.Count == 0)
+            {
+                Console.WriteLine("No patterns available.");
+                return;
+            }
+
+            // Display available patterns
+            foreach (var pattern in PatternsList)
+            {
+                Console.WriteLine($"- {pattern.Name}");
+            }
+
+            // Get the pattern name from the user
+            string input = Console.ReadLine()!;
+            var patternToUpdate = PatternsList.FirstOrDefault(p => p.Name.Equals(input, StringComparison.OrdinalIgnoreCase));
+
+            if (patternToUpdate == null)
+            {
+                Console.WriteLine($"Pattern '{input}' not found.");
+                return;
+            }
+
+            // Ask the user what they want to update
+            Console.WriteLine($"Editing pattern: {patternToUpdate.Name}");
+            Console.WriteLine("What would you like to update? NAME, SIZE, COLORS");
+            string choice = Console.ReadLine()!.ToUpper();
+
+            switch (choice)
+            {
+                case "NAME":
+                    Console.WriteLine("Enter the new name for the pattern:");
+                    string newName = Console.ReadLine()!;
+                    if (!string.IsNullOrWhiteSpace(newName))
+                    {
+                        patternToUpdate.Name = newName;
+                        Console.WriteLine("Pattern name updated successfully.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid name. Update canceled.");
+                    }
+                    break;
+
+                case "SIZE":
+                    Console.WriteLine("Enter the new width of the pattern:");
+                    int newWidth = int.Parse(Console.ReadLine()!);
+                    Console.WriteLine("Enter the new height of the pattern:");
+                    int newHeight = int.Parse(Console.ReadLine()!);
+
+                    // Create a new grid with updated size
+                    string[,] newGrid = new string[newHeight, newWidth];
+
+                    // Copy existing colors to the new grid (if possible)
+                    for (int i = 0; i < Math.Min(patternToUpdate.Grid.GetLength(0), newHeight); i++)
+                    {
+                        for (int j = 0; j < Math.Min(patternToUpdate.Grid.GetLength(1), newWidth); j++)
+                        {
+                            newGrid[i, j] = patternToUpdate.Grid[i, j];
+                        }
+                    }
+
+                    // Update the grid
+                    patternToUpdate.Grid = newGrid;
+                    Console.WriteLine("Pattern size updated successfully.");
+                    break;
+
+                case "COLORS":
+                    Console.WriteLine("Let's update the colors. You can set a default color or edit each cell individually.");
+                    Console.WriteLine("Enter a default hex color (e.g., #FF5733), or leave blank to edit each cell:");
+
+                    string defaultColor = Console.ReadLine()!;
+                    if (IsValidHexColor(defaultColor))
+                    {
+                        for (int i = 0; i < patternToUpdate.Grid.GetLength(0); i++)
+                        {
+                            for (int j = 0; j < patternToUpdate.Grid.GetLength(1); j++)
+                            {
+                                patternToUpdate.Grid[i, j] = defaultColor;
+                            }
+                        }
+                        Console.WriteLine("All cells updated with the default color.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Editing individual cells...");
+                        for (int i = 0; i < patternToUpdate.Grid.GetLength(0); i++)
+                        {
+                            for (int j = 0; j < patternToUpdate.Grid.GetLength(1); j++)
+                            {
+                                Console.WriteLine($"Enter a hex color for cell ({i + 1}, {j + 1}):");
+                                string color = Console.ReadLine()!;
+                                if (IsValidHexColor(color))
+                                {
+                                    patternToUpdate.Grid[i, j] = color;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Invalid color. Skipping this cell.");
+                                }
+                            }
+                        }
+                    }
+                    Console.WriteLine("Pattern colors updated successfully.");
+                    break;
+
+                default:
+                    Console.WriteLine("Invalid choice. Update canceled.");
+                    break;
+            }
         }
 
+        // prompts for pattern to delete, then deletes it
         static public void RemovePattern()
         {
-            Console.WriteLine("Removes a given pattern.");
+            // Check if the list is empty
+            if (PatternsList.Count == 0)
+            {
+                Console.WriteLine("No patterns available to remove.");
+                return;
+            }
+
+            // Display available patterns
+            Console.WriteLine("Available patterns:");
+            foreach (var pattern in PatternsList)
+            {
+                Console.WriteLine($"- {pattern.Name}");
+            }
+            // Ask user for the pattern name to remove
+            Console.WriteLine("Enter the name of the pattern you want to remove:");
+            string input = Console.ReadLine()!;
+
+            // Find the pattern
+            var patternToRemove = PatternsList.FirstOrDefault(p => p.Name.Equals(input, StringComparison.OrdinalIgnoreCase));
+
+            // Check if the pattern was found
+            if (patternToRemove != null)
+            {
+                PatternsList.Remove(patternToRemove); // Remove the pattern from the list
+                Console.WriteLine($"Pattern '{patternToRemove.Name}' has been removed.");
+            }
+            else
+            {
+                Console.WriteLine($"Pattern with the name '{input}' not found.");
+            }
+
         }
 
         // Checks if user input is a valid hex value

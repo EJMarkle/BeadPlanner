@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BeadApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8d81bfad50576fdb6965b3cd4c6dcaf3596ff8ed")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+27703569e07ae285dc7cc58a30cec68091cb6399")]
 [assembly: System.Reflection.AssemblyProductAttribute("BeadApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BeadApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
